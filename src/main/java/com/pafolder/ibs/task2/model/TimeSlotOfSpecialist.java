@@ -26,5 +26,4 @@ public record TimeSlotOfSpecialist(Specialist specialist,
                 String.format(TIME_2DIGITS_FORMAT, timeSlot.endDateTime.getHour()) + ":" +
                 String.format(TIME_2DIGITS_FORMAT, timeSlot.endDateTime.getMinute());
     }
-
 }

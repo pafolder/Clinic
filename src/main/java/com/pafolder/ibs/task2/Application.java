@@ -2,7 +2,7 @@ package com.pafolder.ibs.task2;
 
 import com.pafolder.ibs.task2.model.Specialist;
 import com.pafolder.ibs.task2.model.TimeSlotOfSpecialist;
-import com.pafolder.ibs.task2.service.AppointmentScheduler;
+import com.pafolder.ibs.task2.service.TimeSlotsScheduler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +19,7 @@ public class Application {
     public static final int DR_IVANOV_APPOINTMENT_DURATION = 45;
 
     public static void main(String[] args) {
-        AppointmentScheduler scheduler = new AppointmentScheduler();
+        TimeSlotsScheduler scheduler = new TimeSlotsScheduler();
         initializeData(scheduler);
 
         List<TimeSlotOfSpecialist> initialTimeSlots =
@@ -43,7 +43,7 @@ public class Application {
         freeTimeSlots.forEach(s -> System.out.println(s.toString()));
     }
 
-    static void initializeData(AppointmentScheduler scheduler) {
+    static void initializeData(TimeSlotsScheduler scheduler) {
         if (!scheduler.addSpecialist(new Specialist(DR_IVANOV,
                 DR_IVANOV_APPOINTMENT_DURATION))) {
             throw new RuntimeException(ERROR_WHEN_ADDING_SPECIALIST + DR_IVANOV);
@@ -55,5 +55,4 @@ public class Application {
             }
         });
     }
-
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AppointmentScheduler {
+public class TimeSlotsScheduler {
     public static final int MAX_NANO_OF_SECOND = 999_999_999;
     private final Set<Specialist> specialists = new HashSet<>();
     private final List<TimeSlotOfSpecialist> initialFreeTimeSlotsOfSpecialists = new ArrayList<>();
@@ -69,5 +69,4 @@ public class AppointmentScheduler {
     private Specialist getSpecialistByName(String name) {
         return specialists.stream().filter(s -> name.equals(s.name())).findFirst().orElse(null);
     }
-
 }
