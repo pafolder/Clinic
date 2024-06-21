@@ -14,15 +14,17 @@ public record TimeSlot(Specialist specialist,
     }
 
     public String toString() {
-        return specialist.name() + " " +
-                startDateTime.getDayOfMonth() + "." +
-                startDateTime.getMonth().getValue() + "." +
-                startDateTime.getYear() + " " +
-                String.format(TIME_2DIGITS_FORMAT, startDateTime.getHour()) + ":" +
-                String.format(TIME_2DIGITS_FORMAT, startDateTime.getMinute()) + "..." +
-                String.format(TIME_2DIGITS_FORMAT, endDateTime.getHour()) + ":" +
-                String.format(TIME_2DIGITS_FORMAT, endDateTime.getMinute()) + " " +
-                (isFree ? "свободно" : "занято");
+        return specialist.name() + " " + timeSlotWithoutNameToString(this);
+    }
+
+    public static String timeSlotWithoutNameToString(TimeSlot timeSlot) {
+        return timeSlot.startDateTime.getDayOfMonth() + "." +
+                timeSlot.startDateTime.getMonth().getValue() + "." +
+                timeSlot.startDateTime.getYear() + " " +
+                String.format(TIME_2DIGITS_FORMAT, timeSlot.startDateTime.getHour()) + ":" +
+                String.format(TIME_2DIGITS_FORMAT, timeSlot.startDateTime.getMinute()) + " … " +
+                String.format(TIME_2DIGITS_FORMAT, timeSlot.endDateTime.getHour()) + ":" +
+                String.format(TIME_2DIGITS_FORMAT, timeSlot.endDateTime.getMinute());
     }
 
 }

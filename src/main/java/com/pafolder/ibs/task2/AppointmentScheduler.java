@@ -1,5 +1,6 @@
 package com.pafolder.ibs.task2;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,15 +39,15 @@ public class AppointmentScheduler extends HashSet<Specialist> {
         return new TimeSlot(slot.specialist(), slot.startDateTime(), adjustedEndTime, slot.isFree());
     }
 
-    public List<TimeSlot> getInitialTimeSlotsOfSpecialist(String specialistName, LocalDateTime dateTime) {
-        TimeSlot fullDayTimeSlot = getFullDayTimeSlot(specialistName, dateTime);
+    public List<TimeSlot> getInitialTimeSlotsOfSpecialist(String specialistName, LocalDate date) {
+        TimeSlot fullDayTimeSlot = getFullDayTimeSlot(specialistName, date);
         return initialFreeTimeSlotsOfSpecialists.stream()
                 .filter(s -> specialistName.equals(s.specialist().name()))
                 .filter(t -> t.isStartsWithinTimeSlot(fullDayTimeSlot))
                 .collect(Collectors.toList());
     }
 
-    private TimeSlot getFullDayTimeSlot(String specialistName, LocalDateTime dateTime) {
+    private TimeSlot getFullDayTimeSlot(String specialistName, LocalDate dateTime) {
         return new TimeSlot(getSpecialistByName(specialistName),
                 LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(),
                         dateTime.getDayOfMonth(), 0, 0),

@@ -14,11 +14,11 @@ public class TestData {
                     LocalDateTime.of(2024, 8, 15, 12, 0), true),
             new TimeSlot(null,
                     LocalDateTime.of(2024, 8, 15, 12, 45),
-                    LocalDateTime.of(2024, 8, 15, 16, 59), true),
+                    LocalDateTime.of(2024, 8, 15, 17, 0), true),
             new TimeSlot(null,
                     LocalDateTime.of(2024, 8, 16, 8, 0),
                     LocalDateTime.of(2024, 8, 16, 12, 0), true),
             new TimeSlot(null,
                     LocalDateTime.of(2024, 8, 16, 12, 45),
-                    LocalDateTime.of(2024, 8, 16, 16, 29), true));
+                    LocalDateTime.of(2024, 8, 16, 16, 30), true));
 }
