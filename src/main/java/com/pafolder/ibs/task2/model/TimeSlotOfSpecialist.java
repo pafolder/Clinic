@@ -1,13 +1,13 @@
-package com.pafolder.ibs.task2;
+package com.pafolder.ibs.task2.model;
 
 import java.time.LocalDateTime;
 
-public record TimeSlot(Specialist specialist,
-                       LocalDateTime startDateTime, LocalDateTime endDateTime, boolean isFree) {
+public record TimeSlotOfSpecialist(Specialist specialist,
+                                   LocalDateTime startDateTime, LocalDateTime endDateTime, boolean isFree) {
 
     public static final String TIME_2DIGITS_FORMAT = "%02d";
 
-    public boolean isStartsWithinTimeSlot(TimeSlot other) {
+    public boolean isDurationWithinTimeSlot(TimeSlotOfSpecialist other) {
         return startDateTime.isAfter(other.startDateTime) &&
                 startDateTime.plusMinutes(specialist.appointmentDurationInMinutes())
                         .isBefore(other.endDateTime);
@@ -17,7 +17,7 @@ public record TimeSlot(Specialist specialist,
         return specialist.name() + " " + timeSlotWithoutNameToString(this);
     }
 
-    public static String timeSlotWithoutNameToString(TimeSlot timeSlot) {
+    public static String timeSlotWithoutNameToString(TimeSlotOfSpecialist timeSlot) {
         return timeSlot.startDateTime.getDayOfMonth() + "." +
                 timeSlot.startDateTime.getMonth().getValue() + "." +
                 timeSlot.startDateTime.getYear() + " " +

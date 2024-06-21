@@ -1,4 +1,4 @@
-package com.pafolder.ibs.task2;
+package com.pafolder.ibs.task2.model;
 
 import java.util.Objects;
 
