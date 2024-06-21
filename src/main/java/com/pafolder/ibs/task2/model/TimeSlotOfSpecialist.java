@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 public record TimeSlotOfSpecialist(Specialist specialist,
                                    LocalDateTime startDateTime, LocalDateTime endDateTime, boolean isFree) {
-
     public static final String TIME_2DIGITS_FORMAT = "%02d";
 
     public boolean isDurationWithinTimeSlot(TimeSlotOfSpecialist other) {
