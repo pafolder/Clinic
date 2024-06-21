@@ -30,13 +30,17 @@ public class AppointmentScheduler extends HashSet<Specialist> {
         currentTimeSlots.stream()
                 .filter(TimeSlot::isFree)
                 .filter(s -> specialistName.equals(s.specialist().name()))
-                .filter(t -> t.isStartsWithinTimeSlot(timeSlot))
-                .toList().forEach(ts -> {
-                    result.add(new TimeSlot(ts.specialist(), ts.startDateTime(),
-                            ts.endDateTime().isAfter(endDateTime) ? endDateTime : ts.endDateTime(),
-                            ts.isFree()));
-                });
+                .filter(s -> s.isStartsWithinTimeSlot(timeSlot))
+                .map(s -> createAdjustedTimeSlot(s, endDateTime))
+                .filter(s -> s.startDateTime().isBefore(s.endDateTime()))
+                .forEach(result::add);
         return result;
+    }
+
+    private TimeSlot createAdjustedTimeSlot(TimeSlot slot, LocalDateTime endDateTime) {
+        LocalDateTime adjustedEndTime = (slot.endDateTime().isAfter(endDateTime) ?
+                endDateTime : slot.endDateTime()).minusMinutes(slot.specialist().appointmentDurationInMinutes());
+        return new TimeSlot(slot.specialist(), slot.startDateTime(), adjustedEndTime, slot.isFree());
     }
 
     public List<TimeSlot> getInitialTimeSlotsOfSpecialist(String specialistName, LocalDateTime dateTime) {
