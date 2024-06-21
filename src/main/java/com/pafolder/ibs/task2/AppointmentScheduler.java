@@ -5,13 +5,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AppointmentScheduler extends HashSet<Specialist> {
-    private final List<TimeSlot> initialFreeTimeSlotsOfSpecialists;
-    private final List<TimeSlot> currentTimeSlots;
-
-    public AppointmentScheduler() {
-        initialFreeTimeSlotsOfSpecialists = new ArrayList<>();
-        currentTimeSlots = new LinkedList<>();
-    }
+    private final List<TimeSlot> initialFreeTimeSlotsOfSpecialists = new ArrayList<>();
+    private final List<TimeSlot> currentTimeSlots = new LinkedList<>();
 
     public boolean addFreeTimeSlotOfSpecialist(String specialistName,
                                                LocalDateTime startDateTime, LocalDateTime endDateTime) {
@@ -56,7 +51,7 @@ public class AppointmentScheduler extends HashSet<Specialist> {
                 LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(),
                         dateTime.getDayOfMonth(), 0, 0),
                 LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(),
-                        dateTime.getDayOfMonth(), 23, 59), true);
+                        dateTime.getDayOfMonth(), 23, 59, 59, 999999999), true);
     }
 
     private Specialist getSpecialistByName(String name) {

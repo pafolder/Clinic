@@ -19,7 +19,7 @@ public record TimeSlot(Specialist specialist,
                 startDateTime.getMonth().getValue() + "." +
                 startDateTime.getYear() + " " +
                 String.format(TIME_2DIGITS_FORMAT, startDateTime.getHour()) + ":" +
-                String.format(TIME_2DIGITS_FORMAT, startDateTime.getMinute()) + " ... " +
+                String.format(TIME_2DIGITS_FORMAT, startDateTime.getMinute()) + "..." +
                 String.format(TIME_2DIGITS_FORMAT, endDateTime.getHour()) + ":" +
                 String.format(TIME_2DIGITS_FORMAT, endDateTime.getMinute()) + " " +
                 (isFree ? "свободно" : "занято");
