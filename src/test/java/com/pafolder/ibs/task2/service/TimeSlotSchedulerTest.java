@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TimeSlotsSchedulerTest {
+class TimeSlotSchedulerTest {
     @BeforeAll
     static void setUpBeforeClass() {
     }
 
     @Test
-    void getAvailableTimeSlotsOfSpecialist() {
+    void getInitialTimeSlotsOfSpecialist() {// TODO
     }
 
     @Test
-    void getInitialTimeSlotsOfSpecialist() {
+    void getAvailableTimeSlotsOfSpecialist() {// TODO
     }
 }
