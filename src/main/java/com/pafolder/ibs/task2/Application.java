@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.pafolder.ibs.task2.TestData.*;
-import static com.pafolder.ibs.task2.model.TimeSlot.timeSlotWithoutNameToString;
 
 public class Application {
     public static final String WORKING_HOURS_STRING = "\nИнтервал работы специалиста";
@@ -16,12 +15,13 @@ public class Application {
     public static final String PREDEFINED_TIME_INTERVAL_STRING = "\nЗаданный интервал времени: ";
     public static final String ERROR_WHEN_ADDING_SPECIALIST = "Ошибка при добавлении специалиста ";
     public static final String ERROR_WHEN_ADDING_TIME_SLOT = "Ошибка при инициализации времени работы специалиста ";
-    public static final String DURATION_OF_APPOINTMENT_STRING = "\nДлительность приёма специалиста ";
     public static final String ERROR_SPECIALIST_NOT_FOUND = "\nСпециалист не найден";
+    public static final String APPOINTMENT_STRING = "Приём ";
     public static final String MINUTES_STRING = " минут";
+    public static final String TIME_2DIGIT_FORMAT = "%02d";
 
     public static void main(String[] args) {
-        TimeSlotScheduler scheduler = new TimeSlotScheduler();
+        TimeSlotScheduler<Specialist> scheduler = new TimeSlotScheduler<>();
         initializeData(scheduler);
         try {
             List<TimeSlot> initialTimeSlots = scheduler.getInitialTimeSlotsOfSpecialist(
@@ -31,8 +31,6 @@ public class Application {
                     LocalDateTime.of(testDate1, testTime1),
                     LocalDateTime.of(testDate2, testTime2)
             );
-
-            printAppointmentDuration(scheduler, DR_IVANOV);
             printInitialTimeSlots(initialTimeSlots, DR_IVANOV);
             printPredefinedPeriod();
             printFreeSlotsForPeriod(freeTimeSlots);
@@ -41,21 +39,16 @@ public class Application {
         }
     }
 
-    static void initializeData(TimeSlotScheduler scheduler) {
-        if (!scheduler.addSpecialist(new Specialist(DR_IVANOV,
-                DR_IVANOV_APPOINTMENT_DURATION))) {
+    static void initializeData(TimeSlotScheduler<Specialist> scheduler) {
+        if (!scheduler.addSpecialist(new Specialist(DR_IVANOV))) {
             throw new RuntimeException(ERROR_WHEN_ADDING_SPECIALIST + DR_IVANOV);
         }
         timeSlotsOfIvanov.forEach(s -> {
-            if (!scheduler.addFreeTimeSlotOfSpecialist(DR_IVANOV, s.startDateTime(), s.endDateTime())) {
+            if (!scheduler.addFreeTimeSlotOfSpecialist(DR_IVANOV, s.appointmentDuration(),
+                    s.startDateTime(), s.endDateTime())) {
                 throw new RuntimeException(ERROR_WHEN_ADDING_TIME_SLOT + DR_IVANOV);
             }
         });
-    }
-
-    static void printAppointmentDuration(TimeSlotScheduler scheduler, String specialist) {
-        System.out.printf("%s%s: %d%s%n", DURATION_OF_APPOINTMENT_STRING, specialist,
-                scheduler.getAppointmentDuration(specialist), MINUTES_STRING);
     }
 
     static void printInitialTimeSlots(List<TimeSlot> initialTimeSlots, String specialist) {
@@ -65,13 +58,26 @@ public class Application {
 
     static void printPredefinedPeriod() {
         System.out.println(PREDEFINED_TIME_INTERVAL_STRING + timeSlotWithoutNameToString(
-                new TimeSlot(null, LocalDateTime.of(testDate1, testTime1),
+                new TimeSlot(null, DR_IVANOV_APPOINTMENT_DURATION,
+                        LocalDateTime.of(testDate1, testTime1),
                         LocalDateTime.of(testDate2, testTime2), true)
         ));
     }
 
     static void printFreeSlotsForPeriod(List<TimeSlot> freeTimeSlots) {
         System.out.println(FREE_SLOTS_FOR_PERIOD);
-        freeTimeSlots.forEach(s -> System.out.println(s.toString()));
+        freeTimeSlots.forEach(s -> System.out.println(s.specialist().getName() + " " +
+                timeSlotWithoutNameToString(s)));
+    }
+
+    public static String timeSlotWithoutNameToString(TimeSlot timeSlot) {
+        return timeSlot.startDateTime().getDayOfMonth() + "." +
+                timeSlot.startDateTime().getMonth().getValue() + "." +
+                timeSlot.startDateTime().getYear() + " " +
+                String.format(TIME_2DIGIT_FORMAT, timeSlot.startDateTime().getHour()) + ":" +
+                String.format(TIME_2DIGIT_FORMAT, timeSlot.startDateTime().getMinute()) + " … " +
+                String.format(TIME_2DIGIT_FORMAT, timeSlot.endDateTime().getHour()) + ":" +
+                String.format(TIME_2DIGIT_FORMAT, timeSlot.endDateTime().getMinute()) + " " +
+                APPOINTMENT_STRING + timeSlot.appointmentDuration() + MINUTES_STRING;
     }
 }

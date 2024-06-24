@@ -17,16 +17,16 @@ public class TestData {
     public static final LocalTime testTime2 = LocalTime.of(13, 46);
 
     public static final List<TimeSlot> timeSlotsOfIvanov = Arrays.asList(
-            new TimeSlot(null,
+            new TimeSlot(null, DR_IVANOV_APPOINTMENT_DURATION,
                     LocalDateTime.of(2024, 8, 15, 8, 0),
                     LocalDateTime.of(2024, 8, 15, 12, 0), true),
-            new TimeSlot(null,
+            new TimeSlot(null, DR_IVANOV_APPOINTMENT_DURATION,
                     LocalDateTime.of(2024, 8, 15, 12, 45),
                     LocalDateTime.of(2024, 8, 15, 17, 0), true),
-            new TimeSlot(null,
+            new TimeSlot(null, DR_IVANOV_APPOINTMENT_DURATION,
                     LocalDateTime.of(2024, 8, 16, 8, 0),
                     LocalDateTime.of(2024, 8, 16, 12, 0), true),
-            new TimeSlot(null,
+            new TimeSlot(null, DR_IVANOV_APPOINTMENT_DURATION,
                     LocalDateTime.of(2024, 8, 16, 12, 45),
                     LocalDateTime.of(2024, 8, 16, 16, 30), true));
 }

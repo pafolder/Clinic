@@ -8,36 +8,32 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TimeSlotScheduler {
+public class TimeSlotScheduler<T extends Specialist> {
     public static final int MAX_NANO_OF_SECOND = 999_999_999;
 
-    private final Set<Specialist> specialists = new HashSet<>();
+    private final Set<T> specialists = new HashSet<>();
     private final List<TimeSlot> initialFreeTimeSlotsOfSpecialists = new ArrayList<>();
     private final List<TimeSlot> scheduledTimeSlots = new LinkedList<>();
 
-    public int getAppointmentDuration(String specialistName) {
-        return getSpecialistByName(specialistName).appointmentDurationInMinutes();
-    }
-
-    public boolean addFreeTimeSlotOfSpecialist(String specialistName,
+    public boolean addFreeTimeSlotOfSpecialist(String specialistName, int appointmentDuration,
                                                LocalDateTime startDateTime, LocalDateTime endDateTime) {
         Specialist specialist = getSpecialistByName(specialistName);
         if (specialist == null || !endDateTime.isAfter(startDateTime)) return false;
         TimeSlot freeTimeSlotOfSpecialist =
-                new TimeSlot(specialist, startDateTime, endDateTime, true);
+                new TimeSlot(specialist, appointmentDuration, startDateTime, endDateTime, true);
         initialFreeTimeSlotsOfSpecialists.add(freeTimeSlotOfSpecialist);
         return scheduledTimeSlots.add(freeTimeSlotOfSpecialist);
     }
 
     public List<TimeSlot> getAvailableTimeSlotsOfSpecialist(String specialistName,
-                                                            LocalDateTime startDateTime,
-                                                            LocalDateTime endDateTime)
+                                                            LocalDateTime startDateTime, LocalDateTime endDateTime)
             throws IllegalArgumentException {
-        TimeSlot timeSlot = new TimeSlot(null, startDateTime, endDateTime, false);
+        TimeSlot timeSlot = new TimeSlot(getSpecialistByName(specialistName), 0,
+                startDateTime, endDateTime, false);
         List<TimeSlot> result = new ArrayList<>();
         scheduledTimeSlots.stream()
                 .filter(TimeSlot::isFree)
-                .filter(s -> getSpecialistByName(specialistName).name().equals(s.specialist().name()))
+                .filter(s -> getSpecialistByName(specialistName).getName().equals(s.specialist().getName()))
                 .filter(s -> s.isDurationWithinTimeSlot(timeSlot))
                 .map(s -> createAdjustedTimeSlot(s, endDateTime))
                 .filter(s -> s.startDateTime().isBefore(s.endDateTime()))
@@ -47,8 +43,8 @@ public class TimeSlotScheduler {
 
     private TimeSlot createAdjustedTimeSlot(TimeSlot slot, LocalDateTime endDateTime) {
         LocalDateTime adjustedEndTime = (slot.endDateTime().isAfter(endDateTime) ?
-                endDateTime : slot.endDateTime()).minusMinutes(slot.specialist().appointmentDurationInMinutes());
-        return new TimeSlot(slot.specialist(),
+                endDateTime : slot.endDateTime()).minusMinutes(slot.appointmentDuration());
+        return new TimeSlot(slot.specialist(), slot.appointmentDuration(),
                 slot.startDateTime(), adjustedEndTime, slot.isFree());
     }
 
@@ -56,17 +52,18 @@ public class TimeSlotScheduler {
             throws IllegalArgumentException {
         TimeSlot fullDayTimeSlot = getFullDayTimeSlot(specialistName, date);
         return initialFreeTimeSlotsOfSpecialists.stream()
-                .filter(s -> specialistName.equals(s.specialist().name()))
+                .filter(s -> specialistName.equals(s.specialist().getName()))
                 .filter(t -> t.isDurationWithinTimeSlot(fullDayTimeSlot))
                 .collect(Collectors.toList());
     }
 
-    public boolean addSpecialist(Specialist specialist) {
+    public boolean addSpecialist(T specialist) {
         return specialists.add(specialist);
     }
 
     private TimeSlot getFullDayTimeSlot(String specialistName, LocalDate dateTime) {
-        return new TimeSlot(getSpecialistByName(specialistName),
+        int UNDEFINED = -1;
+        return new TimeSlot(getSpecialistByName(specialistName), UNDEFINED,
                 LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(),
                         dateTime.getDayOfMonth(), 0, 0),
                 LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
@@ -74,7 +71,7 @@ public class TimeSlotScheduler {
     }
 
     private Specialist getSpecialistByName(String name) throws IllegalArgumentException {
-        return specialists.stream().filter(s -> name.equals(s.name())).findFirst()
+        return specialists.stream().filter(s -> name.equals(s.getName())).findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
 }
